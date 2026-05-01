@@ -1,0 +1,895 @@
+/* ==========================================================================
+   Linkding Theme: Modern
+   A clean, modern theme for the self-hosted bookmark manager Linkding.
+   Applies to all pages: bookmarks, settings, shared bookmarks, etc.
+   ========================================================================== */
+
+/* --- Font stack --- */
+/* Modern system font stack for crisp, native-feeling typography */
+:root {
+  --ld-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+html,
+body {
+  font-family: var(--ld-font-family) !important;
+}
+
+/* ==========================================================================
+   1. DESIGN TOKENS (CSS Custom Properties)
+   Linkding's built-in variables change automatically when user selects
+   Light/Dark/Auto in Settings, so we map to them for dynamic theming.
+   ========================================================================== */
+
+
+/* ==========================================================
+   OPTIONAL COLOR OVERRIDES
+   ========================================================== */
+
+:root {
+
+  /* Primary accent color */
+  /* --custom-primary: #4f46e5; */
+
+  /* Tag color */
+  /* --custom-tag: #0f766e; */
+
+  /* Danger color */
+  /* --custom-danger: #dc2626; */
+
+  /* Corner roundness */
+  /* --custom-radius: 18px; */
+
+
+  /* --- Color palette --- */
+
+  --ld-bg: var(--body-color-contrast);
+  --ld-surface: var(--body-color);
+  --ld-surface-soft: var(--body-color-contrast);
+
+  --ld-text: var(--text-color);
+  --ld-muted: var(--secondary-text-color);
+  --ld-muted-light: var(--tertiary-text-color);
+
+  --ld-border: var(--border-color);
+  --ld-border-light: var(--secondary-border-color);
+
+  --ld-primary: var(--custom-primary, var(--primary-color));
+  --ld-primary-hover: var(--primary-color-highlight);
+  --ld-primary-bg: var(--primary-color-shade);
+
+  --ld-tag: var(--custom-tag, var(--alternative-color));
+  --ld-tag-light: color-mix(in srgb, var(--ld-tag) 18%, transparent);
+
+  --ld-danger: var(--custom-danger, var(--error-color));
+  --ld-danger-bg: var(--error-color-shade);
+  --ld-success: var(--success-color);
+
+
+  /* --- Border radius --- */
+
+  --ld-radius: var(--custom-radius, 18px);
+  --ld-radius-sm: calc(var(--custom-radius, 18px) * 0.66);
+  --ld-radius-xs: calc(var(--custom-radius, 18px) * 0.55);
+
+
+  /* --- Shadows --- */
+
+  --ld-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  --ld-shadow-hover: 0 16px 34px rgba(15, 23, 42, 0.10);
+  --ld-shadow-sm: 0 3px 10px rgba(15, 23, 42, 0.045);
+  --ld-shadow-lg: 0 24px 70px rgba(15, 23, 42, 0.22);
+
+
+  /* --- Transitions --- */
+
+  --ld-transition-fast: 0.12s ease;
+  --ld-transition-normal: 0.18s ease;
+
+  /* --- Font stack --- */
+  font-family: var(--ld-font-family);
+}
+
+/* ==========================================================================
+   2. GLOBAL / BASE LAYOUT
+   Background gradient, page container, body adjustments.
+   ========================================================================== */
+
+html,
+body {
+  background:
+    radial-gradient(circle at top left,
+      color-mix(in srgb, var(--ld-primary) 12%, transparent),
+      transparent 35%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--ld-surface) 100%, transparent) 0%,
+      var(--ld-bg) 100%
+    ) !important;
+
+  color: var(--ld-text);
+  font-family: var(--ld-font-family) !important;
+}
+
+body {
+  margin-top: 0 !important;
+}
+
+/* Main content container - increase max-width for more breathing room */
+.container {
+  max-width: 1320px !important;
+}
+
+/* ==========================================================================
+   3. HEADER (sticky, glass-morphism effect)
+   Appears on all pages: bookmarks, settings, shared bookmarks, etc.
+   ========================================================================== */
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  isolation: isolate;
+
+  background: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+
+  margin-bottom: 28px !important;
+  padding: 14px 0 !important;
+}
+
+/* Glass-morphism background overlay */
+header::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  z-index: -1;
+  background: color-mix(in srgb, var(--ld-surface) 92%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--ld-border);
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--ld-text) 6%, transparent);
+}
+
+/* App logo / name */
+header .app-name {
+  color: var(--ld-primary);
+  font-weight: 800 !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Navigation links & buttons */
+header nav a,
+header nav .btn {
+  border-radius: var(--ld-radius-xs) !important;
+  font-weight: 500;
+}
+
+/* Primary action button in header (e.g., "Add bookmark") */
+header .btn-primary {
+  background: var(--ld-primary) !important;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--ld-primary) 30%, transparent);
+}
+
+header .btn-primary:hover {
+  background: var(--ld-primary-hover) !important;
+}
+
+/* ==========================================================================
+   4. BUTTONS (generic btn, btn-primary, btn-link, btn-error, etc.)
+   Used across all pages.
+   ========================================================================== */
+
+.btn {
+  border-radius: var(--ld-radius-xs) !important;
+  transition: background var(--ld-transition-normal), border var(--ld-transition-normal), box-shadow var(--ld-transition-normal), color var(--ld-transition-normal);
+}
+
+.btn-primary {
+  background: var(--ld-primary) !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--ld-primary) 25%, transparent);
+}
+
+.btn-primary:hover {
+  background: var(--ld-primary-hover) !important;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--ld-primary) 35%, transparent);
+}
+
+.btn-link {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.btn-error {
+  color: var(--ld-danger) !important;
+  border-color: color-mix(in srgb, var(--ld-danger) 35%, transparent) !important;
+}
+
+.btn-error:hover {
+  background: var(--ld-danger-bg) !important;
+}
+
+/* Small buttons (e.g., Archive, Remove) */
+.btn-sm {
+  border-radius: 8px !important;
+}
+
+/* ==========================================================================
+   5. FORM ELEMENTS
+   Inputs, selects, textareas, checkboxes, switches.
+   Used heavily on the Settings page and search forms.
+   ========================================================================== */
+
+.form-input,
+.form-select {
+  border-radius: var(--ld-radius-xs) !important;
+  border-color: var(--ld-border) !important;
+  box-shadow: var(--ld-shadow-sm) !important;
+  transition: border var(--ld-transition-fast), box-shadow var(--ld-transition-fast);
+}
+
+.form-input:focus,
+.form-select:focus {
+  border-color: var(--ld-primary) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ld-primary) 18%, transparent) !important;
+}
+
+/* Textareas (e.g., Auto Tagging rules, Custom CSS) */
+textarea.form-input {
+  border-radius: var(--ld-radius-sm) !important;
+}
+
+/* Checkboxes & switches */
+.form-checkbox .form-icon {
+  border-radius: 6px !important;
+  border-color: var(--ld-border) !important;
+}
+
+.form-checkbox input:checked + .form-icon {
+  background: var(--ld-primary) !important;
+  border-color: var(--ld-primary) !important;
+}
+
+/* Form labels */
+.form-label {
+  font-weight: 600 !important;
+  color: var(--ld-text);
+}
+
+/* Form hint text */
+.form-input-hint {
+  color: var(--ld-muted) !important;
+  font-size: 0.65rem !important;
+}
+
+/* Switch toggle */
+.form-switch .form-icon {
+  border-radius: 999px !important;
+}
+
+/* ==========================================================================
+   6. TABLES
+   Used on the Settings "About" section and other data displays.
+   ========================================================================== */
+
+.table td {
+  border-bottom: 1px solid var(--ld-border-light) !important;
+  padding: var(--unit-3) var(--unit-2) !important;
+}
+
+.table tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* ==========================================================================
+   7. SETTINGS PAGE SPECIFIC
+   Sections, headings, details/summary for collapsible groups.
+   ========================================================================== */
+
+.settings-page h1 {
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  margin-bottom: var(--unit-6) !important;
+}
+
+.settings-page section {
+  background: color-mix(in srgb, var(--ld-surface) 82%, transparent);
+  border: 1px solid var(--ld-border);
+  border-radius: var(--ld-radius);
+  box-shadow: var(--ld-shadow);
+  padding: 26px 30px 22px;
+  margin-bottom: var(--unit-10) !important;
+}
+
+.settings-page section h2 {
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: var(--ld-text);
+  border-bottom: 1px solid var(--ld-border) !important;
+  padding-bottom: 12px !important;
+  margin-bottom: 18px !important;
+}
+
+/* Details / summary (collapsible sections like Auto Tagging & Custom CSS) */
+.settings-page details {
+  margin-bottom: var(--unit-4);
+}
+
+.settings-page details summary {
+  cursor: pointer;
+  padding: 8px 0;
+  border-radius: var(--ld-radius-xs);
+  transition: background var(--ld-transition-fast);
+}
+
+.settings-page details summary:hover {
+  background: var(--ld-primary-bg);
+}
+
+.settings-page details summary .form-label {
+  color: var(--ld-primary);
+}
+
+/* Form group spacing */
+.settings-page .form-group {
+  margin-bottom: var(--unit-6) !important;
+}
+
+/* ==========================================================================
+   8. BOOKMARKS PAGE LAYOUT
+   Grid layout with main panel + sidebar.
+   ========================================================================== */
+
+.bookmarks-page.grid {
+  gap: 34px !important;
+  align-items: start;
+}
+
+/* --- Main panel --- */
+.bookmarks-page main {
+  background: color-mix(in srgb, var(--ld-surface) 82%, transparent);
+  border: 1px solid var(--ld-border);
+  border-radius: var(--ld-radius);
+  box-shadow: var(--ld-shadow);
+  padding: 26px 30px 22px;
+}
+
+/* Section header (e.g., "Bookmarks" title row) */
+.section-header {
+  border-bottom: 1px solid var(--ld-border) !important;
+  padding-bottom: 16px !important;
+  margin-bottom: 18px;
+}
+
+.section-header h1 {
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+}
+
+/* Fix sidebar section header spacing */
+.bookmarks-page aside > section:last-child .section-header,
+.bookmarks-page .side-panel > section:last-child .section-header {
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 18px !important;
+}
+
+/* Align TAGS title and menu icon cleanly */
+.bookmarks-page aside > section:last-child .section-header h2,
+.bookmarks-page aside > section:last-child .section-header h3,
+.bookmarks-page .side-panel > section:last-child .section-header h2,
+.bookmarks-page .side-panel > section:last-child .section-header h3 {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* --- Search bar --- */
+.bookmarks-page .search-container {
+  max-width: 430px !important;
+  height: 42px !important;
+  border-radius: var(--ld-radius-sm) !important;
+  box-shadow: var(--ld-shadow-sm) !important;
+}
+
+.bookmarks-page .search-container input,
+.bookmarks-page .search-container .form-autocomplete-input {
+  background: var(--ld-surface) !important;
+  border-color: var(--ld-border) !important;
+  border-radius: var(--ld-radius-sm) 0 0 var(--ld-radius-sm) !important;
+  box-shadow: none !important;
+}
+
+.bookmarks-page .search-container .btn {
+  background: var(--ld-surface) !important;
+  border-color: var(--ld-border) !important;
+}
+
+/* ==========================================================================
+   9. BOOKMARK CARDS
+   The core list items on the bookmarks page.
+   ========================================================================== */
+
+ul.bookmark-list {
+  margin-top: 18px !important;
+}
+
+ul.bookmark-list > li {
+  background: var(--ld-surface);
+  border: 1px solid var(--ld-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--ld-text) 6%, transparent);
+  margin-bottom: 7px !important;
+  padding: 18px 20px !important;
+  transition:
+    transform var(--ld-transition-normal),
+    box-shadow var(--ld-transition-normal);
+}
+
+ul.bookmark-list > li:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ld-shadow-hover);
+}
+
+/* Bookmark title */
+ul.bookmark-list > li .title a {
+  color: var(--ld-primary) !important;
+  font-size: 0.84rem;
+  font-weight: 750 !important;
+}
+
+/* URL display */
+ul.bookmark-list > li .url-display,
+ul.bookmark-list > li .url-path {
+  color: var(--ld-tag) !important;
+  font-size: 0.68rem !important;
+}
+
+/* Description text */
+ul.bookmark-list > li .description {
+  font-size: 0.76rem;
+  line-height: 1.45;
+  margin-top: 3px;
+  color: var(--ld-text);
+}
+
+/* Tags */
+ul.bookmark-list > li .tags a {
+  color: var(--ld-tag) !important;
+  font-weight: 700;
+  background: var(--ld-tag-light);
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  margin: 2px 0;
+  transition: background var(--ld-transition-fast);
+}
+
+ul.bookmark-list > li .tags a:hover {
+  background: color-mix(in srgb, var(--ld-tag) 16%, transparent);
+}
+
+/* Actions row (View, Edit, Archive, Remove, date) */
+ul.bookmark-list > li .actions {
+  color: var(--ld-muted) !important;
+  font-size: 0.66rem !important;
+  margin-top: 8px;
+}
+
+/* Action links in bookmark cards */
+ul.bookmark-list > li .actions a,
+ul.bookmark-list > li .actions button.btn-link {
+  color: var(--ld-muted) !important;
+  font-weight: 500;
+}
+
+ul.bookmark-list > li .actions a:hover,
+ul.bookmark-list > li .actions button.btn-link:hover {
+  color: var(--ld-primary) !important;
+}
+
+/* Preview images */
+ul.bookmark-list > li .preview-image {
+  border: 1px solid var(--ld-border) !important;
+  border-radius: var(--ld-radius-sm) !important;
+}
+
+/* ==========================================================================
+   10. SIDEBAR / SIDE PANEL (Tags, Bundles)
+   ========================================================================== */
+
+.bookmarks-page aside,
+.bookmarks-page .side-panel {
+  position: sticky;
+  top: 92px;
+}
+
+.bookmarks-page aside > section,
+.bookmarks-page .side-panel > section {
+  background: var(--ld-surface) !important;
+  border: 1px solid var(--ld-border) !important;
+  border-radius: var(--ld-radius) !important;
+  box-shadow: var(--ld-shadow) !important;
+  margin-bottom: 22px !important;
+  padding: 22px 24px !important;
+}
+
+.bookmarks-page aside h2,
+.bookmarks-page aside h3,
+.bookmarks-page .side-panel h2,
+.bookmarks-page .side-panel h3 {
+  color: var(--ld-muted) !important;
+  font-size: 0.72rem !important;
+  font-weight: 850 !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Tags panel — same card/header behavior as Bundles */
+.bookmarks-page aside > section:last-child,
+.bookmarks-page .side-panel > section:last-child {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 22px 24px !important;
+}
+
+/* Let Tags header look exactly like Bundles */
+.bookmarks-page aside > section:last-child .section-header,
+.bookmarks-page .side-panel > section:last-child .section-header {
+  border-bottom: 1px solid var(--ld-border) !important;
+  padding-bottom: 16px !important;
+  margin-bottom: 18px !important;
+}
+
+.bookmarks-page aside > section:last-child .section-header h2,
+.bookmarks-page aside > section:last-child .section-header h3,
+.bookmarks-page .side-panel > section:last-child .section-header h2,
+.bookmarks-page .side-panel > section:last-child .section-header h3 {
+  position: static !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+/* Vertical tag list */
+.bookmarks-page aside > section:last-child a,
+.bookmarks-page .side-panel > section:last-child a {
+  display: block !important;
+  width: 100%;
+
+  color: var(--ld-text) !important;
+  font-size: 0.82rem !important;
+  font-weight: 600;
+  line-height: 1.35;
+
+  margin: 0 0 13px 0;
+  padding: 0;
+
+  background: transparent !important;
+  border-radius: 0;
+  text-decoration: none !important;
+
+  white-space: normal;
+  overflow-wrap: anywhere;
+  transition: color var(--ld-transition-fast), transform var(--ld-transition-fast);
+}
+
+.bookmarks-page aside > section:last-child a::before,
+.bookmarks-page .side-panel > section:last-child a::before {
+  content: "#";
+  display: inline-block;
+  width: 22px;
+  margin-right: 4px;
+
+  color: var(--ld-muted-light);
+  font-weight: 800;
+}
+
+.bookmarks-page aside > section:last-child a:hover,
+.bookmarks-page .side-panel > section:last-child a:hover {
+  color: var(--ld-primary) !important;
+  transform: translateX(2px);
+}
+
+/* Custom scrollbar for tags panel */
+.bookmarks-page aside > section:last-child::-webkit-scrollbar,
+.bookmarks-page .side-panel > section:last-child::-webkit-scrollbar {
+  width: 5px;
+}
+
+.bookmarks-page aside > section:last-child::-webkit-scrollbar-thumb,
+.bookmarks-page .side-panel > section:last-child::-webkit-scrollbar-thumb {
+  background: var(--ld-muted-light);
+  border-radius: 999px;
+}
+
+.bookmarks-page aside > section:last-child::-webkit-scrollbar-track,
+.bookmarks-page .side-panel > section:last-child::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Tag prefix character (#) */
+.bookmarks-page aside > section:last-child a::before,
+.bookmarks-page .side-panel > section:last-child a::before {
+  content: "# ";
+  color: var(--ld-muted-light);
+  font-weight: 800;
+}
+
+.bookmarks-page aside > section:last-child a:hover,
+.bookmarks-page .side-panel > section:last-child a:hover {
+  background: var(--ld-primary-bg);
+  color: var(--ld-primary) !important;
+  transform: translateX(2px);
+}
+
+/* Custom scrollbar for tags panel */
+.bookmarks-page aside > section:last-child::-webkit-scrollbar,
+.bookmarks-page .side-panel > section:last-child::-webkit-scrollbar {
+  width: 6px;
+}
+
+.bookmarks-page aside > section:last-child::-webkit-scrollbar-thumb,
+.bookmarks-page .side-panel > section:last-child::-webkit-scrollbar-thumb {
+  background: var(--ld-muted-light);
+  border-radius: 999px;
+}
+
+.bookmarks-page aside > section:last-child::-webkit-scrollbar-track,
+.bookmarks-page .side-panel > section:last-child::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ==========================================================================
+   11. TAG CLOUD (filter page, shared page)
+   ========================================================================== */
+
+.tag-cloud .selected-tags a {
+  color: var(--ld-danger) !important;
+}
+
+.tag-cloud .unselected-tags a {
+  color: var(--ld-tag) !important;
+}
+
+.tag-cloud .group {
+  margin-bottom: var(--unit-3) !important;
+}
+
+.tag-cloud .highlight-char {
+  color: var(--ld-tag) !important;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   12. MODALS / DIALOGS
+   Applies to bookmark detail modals, confirmation dialogs, etc.
+   ========================================================================== */
+
+.modal-container,
+dialog,
+[role="dialog"] {
+  background: var(--ld-surface) !important;
+  border: 1px solid var(--ld-border) !important;
+  border-radius: var(--ld-radius) !important;
+  box-shadow: var(--ld-shadow-lg) !important;
+  padding: 24px 28px !important;
+}
+
+.modal-overlay {
+  background: color-mix(in srgb, var(--ld-bg) 72%, transparent) !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Modal buttons */
+.modal-container .btn {
+  border-radius: var(--ld-radius-xs) !important;
+  border-color: var(--ld-border) !important;
+}
+
+.modal-container .btn-primary {
+  background: var(--ld-primary) !important;
+  color: var(--contrast-text-color) !important;
+}
+
+.modal-container .btn-error {
+  color: var(--ld-danger) !important;
+  border-color: color-mix(in srgb, var(--ld-danger) 45%, transparent) !important;
+}
+
+/* ==========================================================================
+   13. PAGINATION
+   Footer pagination on the bookmarks page.
+   ========================================================================== */
+
+.pagination {
+  display: flex;
+  list-style: none;
+  margin: var(--unit-1) 0;
+  padding: var(--unit-1) 0;
+  gap: 2px;
+}
+
+.pagination .page-item {
+  margin: 0;
+}
+
+.pagination .page-item a {
+  border-radius: var(--ld-radius-xs) !important;
+  display: inline-block;
+  padding: var(--unit-1) var(--unit-2);
+  text-decoration: none;
+  transition: background var(--ld-transition-fast);
+}
+
+.pagination .page-item a:hover {
+  background: var(--ld-primary-bg);
+  color: var(--ld-primary) !important;
+}
+
+.pagination .active.page-item a {
+  background: var(--ld-primary);
+  color: var(--contrast-text-color);
+  font-weight: 600;
+}
+
+/* Sticky pagination bar */
+.bookmark-pagination.sticky {
+  background: var(--ld-surface);
+  border-top: 1px solid var(--ld-border) !important;
+  bottom: 0;
+  padding-bottom: var(--unit-h);
+  position: sticky;
+}
+
+/* ==========================================================================
+   14. DROPDOWN MENUS
+   ========================================================================== */
+
+.menu {
+  background: var(--ld-surface) !important;
+  border: 1px solid var(--ld-border) !important;
+  border-radius: var(--ld-radius-sm) !important;
+  box-shadow: var(--ld-shadow) !important;
+}
+
+.menu .menu-item > a,
+.menu .menu-item .btn.btn-link {
+  border-radius: var(--ld-radius-xs);
+  transition: background var(--ld-transition-fast);
+}
+
+.menu .menu-item > a:hover,
+.menu .menu-item .btn.btn-link:hover {
+  background: var(--ld-primary-bg) !important;
+  color: var(--ld-primary) !important;
+}
+
+/* ==========================================================================
+   15. BULK EDIT BAR
+   ========================================================================== */
+
+.bulk-edit-bar {
+  background: var(--ld-primary-bg) !important;
+  border-bottom: 1px solid var(--ld-border) !important;
+  padding: var(--unit-1) 0 !important;
+  border-radius: var(--ld-radius-xs);
+}
+
+.bulk-edit-bar button:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   16. IMPORT / EXPORT SECTIONS (Settings page)
+   ========================================================================== */
+
+.settings-page .input-group {
+  border-radius: var(--ld-radius-sm) !important;
+  box-shadow: var(--ld-shadow-sm) !important;
+}
+
+.settings-page .input-group .form-input {
+  box-shadow: none !important;
+}
+
+.settings-page .input-group .btn {
+  box-shadow: none !important;
+}
+
+/* File input styling */
+.settings-page input[type="file"] {
+  padding: var(--control-padding-y) var(--control-padding-x) !important;
+}
+
+/* ==========================================================================
+   17. ABOUT SECTION (Settings page)
+   ========================================================================== */
+
+.settings-page section.about table {
+  max-width: 400px;
+}
+
+.settings-page section.about a {
+  color: var(--ld-primary);
+  font-weight: 500;
+}
+
+.settings-page section.about a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   18. RESPONSIVE / MOBILE ADJUSTMENTS
+   ========================================================================== */
+
+@media (max-width: 840px) {
+  .bookmarks-page aside,
+  .bookmarks-page .side-panel {
+    position: static;
+  }
+
+  .bookmarks-page .side-panel > section:last-child {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .bookmarks-page main {
+    padding: 18px;
+  }
+
+  ul.bookmark-list > li {
+    padding: 15px !important;
+  }
+
+  .settings-page section {
+    padding: 18px;
+  }
+
+  .settings-page .form-select,
+  .settings-page .form-input {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 10px 0 !important;
+  }
+
+  header .app-name {
+    font-size: 0.75rem !important;
+  }
+
+  .bookmarks-page .search-container {
+    max-width: none !important;
+    width: 100% !important;
+  }
+}
+
+/* ==========================================================================
+   19. MISC / UTILITY OVERRIDES
+   ========================================================================== */
+
+/* Ensure code/pre elements look good */
+code,
+pre {
+  border-radius: var(--ld-radius-xs) !important;
+}
+
+/* Toast / notification messages */
+.message-list .toast a.btn-clear:visited {
+  color: currentColor;
+}
+
+/* Smooth anchor hover underlines */
+a {
+  transition: color var(--ld-transition-fast);
+}
