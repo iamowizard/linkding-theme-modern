@@ -173,7 +173,8 @@ This affects:
 * No template modifications required
 * No JavaScript required
 * Fully respects Linkding's native theme switching
-* Tags sidebar assumes **Tags panel is last**
+* Tags styling targets Linkding’s `section[aria-labelledby="tags-heading"]` and its tag cloud; other sidebar sections and the Tags menu are excluded.
+* Tag rows have full-width hover and keyboard-focus highlighting. Selected tags keep Linkding’s red remove-filter cue.
 
 ---
 

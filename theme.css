@@ -372,23 +372,6 @@ textarea.form-input {
   font-weight: 800 !important;
 }
 
-/* Fix sidebar section header spacing */
-.bookmarks-page aside > section:last-child .section-header,
-.bookmarks-page .side-panel > section:last-child .section-header {
-  border-bottom: none !important;
-  padding-bottom: 0 !important;
-  margin-bottom: 18px !important;
-}
-
-/* Align TAGS title and menu icon cleanly */
-.bookmarks-page aside > section:last-child .section-header h2,
-.bookmarks-page aside > section:last-child .section-header h3,
-.bookmarks-page .side-panel > section:last-child .section-header h2,
-.bookmarks-page .side-panel > section:last-child .section-header h3 {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
 /* --- Search bar --- */
 .bookmarks-page .search-container {
   max-width: 430px !important;
@@ -531,117 +514,111 @@ ul.bookmark-list > li .preview-image {
 }
 
 /* Tags panel — same card/header behavior as Bundles */
-.bookmarks-page aside > section:last-child,
-.bookmarks-page .side-panel > section:last-child {
+.bookmarks-page aside > section[aria-labelledby="tags-heading"],
+.bookmarks-page .side-panel > section[aria-labelledby="tags-heading"] {
   max-height: 70vh;
   overflow-y: auto;
   padding: 22px 24px !important;
 }
 
 /* Let Tags header look exactly like Bundles */
-.bookmarks-page aside > section:last-child .section-header,
-.bookmarks-page .side-panel > section:last-child .section-header {
+.bookmarks-page aside > section[aria-labelledby="tags-heading"] .section-header,
+.bookmarks-page .side-panel > section[aria-labelledby="tags-heading"] .section-header {
   border-bottom: 1px solid var(--ld-border) !important;
   padding-bottom: 16px !important;
   margin-bottom: 18px !important;
 }
 
-.bookmarks-page aside > section:last-child .section-header h2,
-.bookmarks-page aside > section:last-child .section-header h3,
-.bookmarks-page .side-panel > section:last-child .section-header h2,
-.bookmarks-page .side-panel > section:last-child .section-header h3 {
+.bookmarks-page aside > section[aria-labelledby="tags-heading"] .section-header h2,
+.bookmarks-page aside > section[aria-labelledby="tags-heading"] .section-header h3,
+.bookmarks-page .side-panel > section[aria-labelledby="tags-heading"] .section-header h2,
+.bookmarks-page .side-panel > section[aria-labelledby="tags-heading"] .section-header h3 {
   position: static !important;
   margin: 0 !important;
   padding: 0 !important;
   background: transparent !important;
 }
 
-/* Vertical tag list */
-.bookmarks-page aside > section:last-child a,
-.bookmarks-page .side-panel > section:last-child a {
+/* Tag links only: keep the Tags menu and other sidebar sections untouched. */
+.bookmarks-page section[aria-labelledby="tags-heading"] .tag-cloud :is(.selected-tags, .unselected-tags) a {
   display: block !important;
+  box-sizing: border-box;
   width: 100%;
-
   color: var(--ld-text) !important;
   font-size: 0.82rem !important;
   font-weight: 600;
   line-height: 1.35;
 
-  margin: 0 0 13px 0;
-  padding: 0;
-
-  background: transparent !important;
-  border-radius: 0;
+  /* Replace 12px of the old 13px gap with clickable vertical padding. */
+  margin: 0 0 1px 0 !important;
+  padding: 6px 8px;
+  background: transparent;
+  border-radius: var(--ld-radius-xs);
   text-decoration: none !important;
-
   white-space: normal;
   overflow-wrap: anywhere;
-  transition: color var(--ld-transition-fast), transform var(--ld-transition-fast);
+  transition: background-color var(--ld-transition-fast);
 }
 
-.bookmarks-page aside > section:last-child a::before,
-.bookmarks-page .side-panel > section:last-child a::before {
-  content: "#";
+.bookmarks-page section[aria-labelledby="tags-heading"] .tag-cloud :is(.selected-tags, .unselected-tags) a::before {
+  content: "# ";
   display: inline-block;
   width: 22px;
   margin-right: 4px;
-
   color: var(--ld-muted-light);
   font-weight: 800;
 }
 
-.bookmarks-page aside > section:last-child a:hover,
-.bookmarks-page .side-panel > section:last-child a:hover {
-  color: var(--ld-primary) !important;
-  transform: translateX(2px);
+/* A full-row tint without moving the text; works with native theme colors. */
+@media (hover: hover) {
+  .bookmarks-page section[aria-labelledby="tags-heading"] .tag-cloud .unselected-tags a:hover {
+    background: color-mix(in srgb, var(--ld-primary) 10%, transparent);
+  }
+}
+
+.bookmarks-page section[aria-labelledby="tags-heading"] .tag-cloud :is(.selected-tags, .unselected-tags) a:focus-visible {
+  background: color-mix(in srgb, var(--ld-primary) 10%, transparent);
+  outline: var(--focus-outline, 2px solid var(--ld-primary));
+  outline-offset: -2px;
+}
+
+/* Selected tags remove a filter when clicked: preserve Linkding's red cue. */
+.bookmarks-page section[aria-labelledby="tags-heading"] .tag-cloud .selected-tags a {
+  color: var(--ld-danger) !important;
+  background: color-mix(in srgb, var(--ld-danger) 8%, transparent);
+  box-shadow: inset 3px 0 0 var(--ld-danger);
+}
+
+.bookmarks-page section[aria-labelledby="tags-heading"] .tag-cloud .selected-tags a:focus-visible {
+  background: color-mix(in srgb, var(--ld-danger) 14%, transparent);
+}
+
+@media (hover: hover) {
+  .bookmarks-page section[aria-labelledby="tags-heading"] .tag-cloud .selected-tags a:hover {
+    background: color-mix(in srgb, var(--ld-danger) 14%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bookmarks-page section[aria-labelledby="tags-heading"] .tag-cloud :is(.selected-tags, .unselected-tags) a {
+    transition: none;
+  }
 }
 
 /* Custom scrollbar for tags panel */
-.bookmarks-page aside > section:last-child::-webkit-scrollbar,
-.bookmarks-page .side-panel > section:last-child::-webkit-scrollbar {
-  width: 5px;
-}
-
-.bookmarks-page aside > section:last-child::-webkit-scrollbar-thumb,
-.bookmarks-page .side-panel > section:last-child::-webkit-scrollbar-thumb {
-  background: var(--ld-muted-light);
-  border-radius: 999px;
-}
-
-.bookmarks-page aside > section:last-child::-webkit-scrollbar-track,
-.bookmarks-page .side-panel > section:last-child::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* Tag prefix character (#) */
-.bookmarks-page aside > section:last-child a::before,
-.bookmarks-page .side-panel > section:last-child a::before {
-  content: "# ";
-  color: var(--ld-muted-light);
-  font-weight: 800;
-}
-
-.bookmarks-page aside > section:last-child a:hover,
-.bookmarks-page .side-panel > section:last-child a:hover {
-  background: var(--ld-primary-bg);
-  color: var(--ld-primary) !important;
-  transform: translateX(2px);
-}
-
-/* Custom scrollbar for tags panel */
-.bookmarks-page aside > section:last-child::-webkit-scrollbar,
-.bookmarks-page .side-panel > section:last-child::-webkit-scrollbar {
+.bookmarks-page aside > section[aria-labelledby="tags-heading"]::-webkit-scrollbar,
+.bookmarks-page .side-panel > section[aria-labelledby="tags-heading"]::-webkit-scrollbar {
   width: 6px;
 }
 
-.bookmarks-page aside > section:last-child::-webkit-scrollbar-thumb,
-.bookmarks-page .side-panel > section:last-child::-webkit-scrollbar-thumb {
+.bookmarks-page aside > section[aria-labelledby="tags-heading"]::-webkit-scrollbar-thumb,
+.bookmarks-page .side-panel > section[aria-labelledby="tags-heading"]::-webkit-scrollbar-thumb {
   background: var(--ld-muted-light);
   border-radius: 999px;
 }
 
-.bookmarks-page aside > section:last-child::-webkit-scrollbar-track,
-.bookmarks-page .side-panel > section:last-child::-webkit-scrollbar-track {
+.bookmarks-page aside > section[aria-labelledby="tags-heading"]::-webkit-scrollbar-track,
+.bookmarks-page .side-panel > section[aria-labelledby="tags-heading"]::-webkit-scrollbar-track {
   background: transparent;
 }
 
@@ -836,7 +813,8 @@ dialog,
     position: static;
   }
 
-  .bookmarks-page .side-panel > section:last-child {
+  .bookmarks-page aside > section[aria-labelledby="tags-heading"],
+  .bookmarks-page .side-panel > section[aria-labelledby="tags-heading"] {
     max-height: none;
     overflow: visible;
   }
